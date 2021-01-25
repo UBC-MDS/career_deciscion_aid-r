@@ -18,13 +18,12 @@ app = Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.cs
 
 app$layout(htmlDiv(
   list(
-    dccGraph(figure = ggplotly(lang_plot)),
     dccGraph(id = 'lang_plot'),
     dccDropdown(
       id = "role_select",
       options = purrr::map(roles, function(roles) list(label = roles, value = roles)),
-      value = "Data Scientist"),
-    htmlDiv(id='widget-3'))))
+      value = "Data Scientist")
+    )))
 
 # Call back to lang bar graph- currently not working
 app$callback(
@@ -33,7 +32,7 @@ app$callback(
   function(role) {
     print(role)
     lang_plot <- lang_data %>%
-      filter(Q5 == "Data Scientist") %>%
+      filter(Q5 == role) %>%
       ggplot((aes(x = forcats::fct_infreq(selected_lang)))) +
         geom_bar()+
         coord_flip() +
@@ -53,14 +52,7 @@ app$callback(
  }
 )
 
-lang_plot <- lang_data %>%
-  filter(Q5 == "Data Scientist") %>%
-  ggplot((aes(x = forcats::fct_infreq(selected_lang)))) +
-  geom_bar()+
-  coord_flip() +
-  xlab("") +
-  ylab("") +
-  theme_classic()
+
 
 app$run_server(debug = T)
 
