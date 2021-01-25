@@ -26,13 +26,12 @@ app$layout(htmlDiv(
       value = "Data Scientist"),
     htmlDiv(id='widget-3'))))
 
-app$run_server(debg = T)
-
 # Call back to lang bar graph- currently not working
 app$callback(
   list(output('lang_plot', 'figure')),
   list(input('role_select', 'value')),
   function(role) {
+    print(role)
     lang_plot <- lang_data %>%
       filter(Q5 == "Data Scientist") %>%
       ggplot((aes(x = forcats::fct_infreq(selected_lang)))) +
@@ -41,7 +40,7 @@ app$callback(
         xlab("") +
         ylab("") +
         theme_classic()
-      ggplotly(lang_plot)
+    list(ggplotly(lang_plot))
     }
 )
 
@@ -50,9 +49,18 @@ app$callback(
  list(output('widget-3', 'children')),
  list(input('role_select', 'value')),
  function(input_val){
-   input_val
+   list(input_val)
  }
 )
 
+lang_plot <- lang_data %>%
+  filter(Q5 == "Data Scientist") %>%
+  ggplot((aes(x = forcats::fct_infreq(selected_lang)))) +
+  geom_bar()+
+  coord_flip() +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
+app$run_server(debug = T)
 
