@@ -1,0 +1,60 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+# Loading data and removing the row that contains questions
+kaggle_survey <- read_csv(here("data/kaggle_survey_2020_responses.csv")) %>%
+  filter(str_detect(Q1, "What", negate = TRUE))
+  
+```
+Q7: programming languages
+```{r}
+ml_eng_prog_lang <- kaggle_survey %>%
+  filter(str_detect(Q5, "Machine Learning Engineer")) %>%
+  select(starts_with("Q7")) %>%
+  # Melting all the programming language Q's down into a plot
+  pivot_longer(cols = everything(), values_to = 'language_mentioned') %>%
+  filter(!is.na(language_mentioned)) %>%
+  ggplot(aes(x = language_mentioned)) +
+    geom_bar() 
+ggsave(here("figures/ml_engineer_programming_languages.png"))
+```
+
+```{r}
+# Plotting Most Common Machine Learning Approaches Among Machine Learning 
+# Engineers
+kaggle_survey %>%
+  filter(str_detect(Q5, "Machine Learning Engineer")) %>%
+  select(starts_with("Q17")) %>%
+  pivot_longer(cols = everything(), values_to = 'frameworks_mentioned') %>%
+  filter(!is.na(frameworks_mentioned)) %>%
+  ggplot(aes(x = frameworks_mentioned)) +
+    geom_bar() +
+    coord_flip() 
+
+ggsave(here("figures/ml_engineer_ml_models.png"))
+
+
+```
+```{r}
+# Income Plot
+kaggle_survey %>%
+  select(Q24) %>%
+  # Remove dollar signs, commas, and carrots
+  mutate(Q24 = str_replace_all(Q24 ,"\\$|\\,|\\>", ""),
+         beg_range = str_extract(Q24,look("[1-9]?(?=\\-)"))
+         ) %>%
+  filter(!is.na(Q24))
+  #ggplot(aes(x = Q24)) +
+  #  geom_bar() +
+  #  coord_flip()
+```
+
