@@ -7,6 +7,9 @@ library(plotly)
 
 # Loading Data Sets
 lang_data <- read_csv(here('data/Processed/lang_barplot_data.csv'))
+ml_data <- read_csv(here('data/Processed/ml_barplot_data.csv'))
+general_processed_data <- read_csv(here('data/Processed/general_processed_data.csv'))
+
 
 roles <- lang_data %>%
   filter(Q5 != "Student" & Q5 != "Other" & Q5 != "Currently not employed" ) %>%
@@ -22,7 +25,9 @@ app$layout(htmlDiv(
     dccDropdown(
       id = "role_select",
       options = purrr::map(roles, function(roles) list(label = roles, value = roles)),
-      value = "Data Scientist")
+      value = "Data Scientist"),
+    dccGraph(id = 'ML_plot'),
+    dccGraph(id = 'Rec_lang_count_plot')
     )))
 
 # Call back to lang bar graph- currently not working
@@ -43,13 +48,38 @@ app$callback(
     }
 )
 
-# Code used for debugging- trying to see if issue is with callback
 app$callback(
- list(output('widget-3', 'children')),
- list(input('role_select', 'value')),
- function(input_val){
-   list(input_val)
- }
+  list(output('ML_plot', 'figure')),
+  list(input('role_select', 'value')),
+  function(role) {
+    print(role)
+    ml_data <- ml_data %>%
+      filter(Q5 == role) %>%
+      ggplot((aes(x = forcats::fct_infreq(selected_ml_method)))) +
+      geom_bar()+
+      coord_flip() +
+      xlab("") +
+      ylab("") +
+      theme_classic()
+    list(ggplotly(ml_data))
+  }
+)
+
+app$callback(
+  list(output('Rec_lang_count_plot', 'figure')),
+  list(input('role_select', 'value')),
+  function(role) {
+    print(role)
+    general_processed_data <- general_processed_data %>%
+      filter(Q5 == role) %>%
+      ggplot((aes(x = Q8, y = Q4))) +
+      geom_count()+
+      coord_flip() +
+      xlab("") +
+      ylab("") +
+      theme_classic()
+    list(ggplotly(general_processed_data))
+  }
 )
 
 
