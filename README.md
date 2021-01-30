@@ -1,7 +1,7 @@
 
 # Data Science Decision Aid Dashboard
 
-## Heroku Link: https://careeraid.herokuapp.com/
+## Heroku Link: https://career-aid-v2.herokuapp.com/
 
 ## Welcome!
 
