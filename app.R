@@ -49,14 +49,14 @@ app$layout(
     list(
       dbcRow(
         htmlH1('Data Science Decision Aid Dashboard',
-               style=list('color' = '#D6ED17FF', 'background-color' = '#606060FF')
+               style=list('color' = '#2E4053', 'background-color' = '#CACFD2')
         )
       ),
       dbcRow(
         htmlP('This dashboard has the objective of informing Data Science students, professionals and even prospects (future possible Data Sciences professionals
            the worldwide state of the art regarding most used programming languages,machine learning methods, the recommended programs to learn first with a 
            considerable aggregated value (for prospects),and yearly income of different job titles.',
-           style=list('color' = '#D6ED17FF', 'background-color' = '#606060FF')
+           #style=list('color' = '#D6ED17FF', 'background-color' = '#606060FF')
         )
       ),
       dbcRow(
@@ -119,8 +119,12 @@ app$layout(
               htmlBr(),
               htmlBr(),
               htmlBr(),
-              htmlLabel('Median Yearly Salary'),
-              dbcCard(dbcCardBody(id="median_salary"), color='warning', style = list('text-align'= 'center'))
+              #htmlLabel('Median Yearly Salary'),
+              dbcCard(list(htmlBr(),
+                           htmlH4("Median Yearly Salary($)", style = list('text-align' = 'center')),
+                           dbcCardBody(id = 'median_salary')), color = "warning", style = list('text-align' = 'center',
+                                                                                               'font-size' = '22px',
+                                                                                               'height' = '18vh'))
             )
           ,md=4)
         )
@@ -134,7 +138,6 @@ app$callback(
        input('prog_exp', 'value')),
   function(role, prog_exp) {
     exp_range <- slider_recognition(prog_exp)
-    print(role)
     lang_plot <- lang_data %>%
       filter(Q5 == role & Q6 == exp_range) %>%
       ggplot((aes(x = forcats::fct_infreq(selected_lang)))) +
@@ -157,7 +160,6 @@ app$callback(
   list(input('role_select', 'value'),
        input('prog_exp', 'value')),
   function(role, prog_exp) {
-    print(role)
     exp_range <- slider_recognition(prog_exp)
     ml_plot <- ml_data %>%
       filter(Q5 == role & Q6 == exp_range) %>%
@@ -181,12 +183,11 @@ app$callback(
   list(input('role_select', 'value'),
        input('prog_exp', 'value')),
   function(role, prog_exp) {
-    print(role)
     exp_range <- slider_recognition(prog_exp)
     general_processed_plot <- general_processed_data %>%
       filter(Q5 == role & Q6 == exp_range) %>%
       ggplot((aes(y = Q8, x = Q4))) +
-      geom_count()+
+      geom_count() +
       coord_flip() +
       ggtitle("Level of Education vs. Recommended Programs to Learn") +
       xlab("") +
@@ -212,13 +213,12 @@ app$callback(
     exp_range <- slider_recognition(prog_exp)
     data <- general_processed_data %>%
       filter(Q5 == role & Q6 == exp_range)
-    obtained_salary <-paste(as.character(median(data$lower, na.rm=TRUE)), "-",as.character(median(data$higher, na.rm=TRUE)), " (USD)")
-    print(obtained_salary)
-    obtained_salary
+    obtained_salary <- paste(as.character(median(data$lower, na.rm=TRUE)), "-",as.character(median(data$higher, na.rm=TRUE)), " (USD)")
+    list(obtained_salary)
   }
 )
 
 
 
-app$run_server(debug = T)
-
+#app$run_server(debug = T)
+app$run_server(host = '0.0.0.0')
