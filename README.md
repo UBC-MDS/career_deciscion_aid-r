@@ -27,7 +27,7 @@ The objective of this app is to provide some insight for those Data Scientists w
 Across the top of our dashboard, a drop-down menu will allow our user to filter the data by given job title. Structure wise, the app will include a slider to insert the experience gap they currently find themselves in (between 0 years to ten or more years). Moreover, in a dropdown menu, users will specify the job title they are interested in. Upon opening the dashboard, no filtering will be applied so that the user can first examine the overall distribution of these preferences and garner more insight into what is a distinct skill specific to a given job title and what is more of an overarching skill for all data science-related professions. In reality, many job titles and their specific functions are considerably intertwined, hence, the usage of this dashboard could help a user identify key differences that align more with their profile. Interactive functions will be implemented, allowing the user to modify the color scheme and size of their plots, if their understanding is being affected by the current presentation.
 
 
-![dashboard](figures/dashboard_proposal.png)
+![dashboard](figures/new_dash.png)
 
 
 ## Contact us
