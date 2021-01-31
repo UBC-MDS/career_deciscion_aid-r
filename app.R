@@ -124,7 +124,7 @@ app$layout(
                            htmlH4("Median Yearly Salary($)", style = list('text-align' = 'center')),
                            dbcCardBody(id = 'median_salary')), color = "warning", style = list('text-align' = 'center',
                                                                                                'font-size' = '22px',
-                                                                                               'height' = '18vh'))
+                                                                                               'height' = '24vh'))
             )
           ,md=4)
         )
@@ -220,5 +220,5 @@ app$callback(
 
 
 
-#app$run_server(debug = T)
-app$run_server(host = '0.0.0.0')
+app$run_server(debug = T)
+# app$run_server(host = '0.0.0.0')
