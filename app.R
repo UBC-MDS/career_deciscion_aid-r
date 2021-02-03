@@ -10,6 +10,8 @@ library(plotly)
 lang_data <- read_csv(here('data/Processed/lang_barplot_data.csv'))
 ml_data <- read_csv(here('data/Processed/ml_barplot_data.csv'))
 general_processed_data <- read_csv(here('data/Processed/general_processed_data.csv'))
+fluc_data <- read_csv(here('data/Processed/Fluctuation_plot_data.csv'))
+
 
 
 roles <- lang_data %>%
@@ -40,13 +42,7 @@ slider_recognition <- function(prog_exp__val){
   exp_range
 }
 
-ml_data <- ml_data %>%
-  mutate(selected_ml_method = case_when(selected_ml_method=="Dense Neural Networks (MLPs, etc)" ~ "Dense Neural Networks",
-                                         selected_ml_method=="Gradient Boosting Machines (xgboost, lightgbm, etc)" ~ "Gradient Boosting Machines",
-                                         selected_ml_method=="None" ~ "I do not use ML Methods",
-                                          TRUE ~ selected_ml_method))
  
-
 app = Dash$new(external_stylesheets = dbcThemes$BOOTSTRAP)
 
 
@@ -98,7 +94,7 @@ app$layout(
                   dbcCol(
                     list(
                       htmlH1('Data Science Decision Aid Dashboard',
-                             style=list('color' = '#2E4053', 'text-align'= 'left', 'background-color' = '#CACFD2')
+                             style=list('color' = '#2E4053', 'text-align'= 'left')
                       ),
                       dbcCollapse(
                         htmlP('This dashboard has the objective of informing Data Science students, professionals and even prospects (future possible Data Sciences professionals
@@ -120,7 +116,6 @@ app$layout(
               'margin-bottom'= 20,
               'margin-right'= 15
             )))),
-      htmlBr(),
       htmlBr(),
       dbcRow(
         list(
@@ -266,17 +261,15 @@ app$callback(
        input('country_select', 'value')),
   function(role, prog_exp, countries) {
     exp_range <- slider_recognition(prog_exp)
-    general_processed_plot <- general_processed_data %>%
+    general_processed_plot <- fluc_data %>%
       filter(Q5 == role & Q6 == exp_range & Q3 %in% countries) %>%
       ggplot((aes(y = Q8, x = Q4))) +
       geom_count() +
       coord_flip() +
-      ggtitle("Level of Education vs. Recommended Programs to Learn") +
+      ggtitle("Level of Education vs. Recommended Programing Languages to Learn") +
       xlab("") +
       ylab("") +
       theme_classic() +
-      scale_x_discrete(labels=c("Bachelor Degree", "Doctoral Degree", "Prefer not to Answer", "Masters Degree",
-                                "Some Professional Degree", "No Professional Degree")) +
       theme(plot.title = element_text(hjust = 0.5)) +
       theme(
         plot.title = element_text(size = 9, face = "bold"),
@@ -303,5 +296,5 @@ app$callback(
  
 
 
-app$run_server(debug = T)
+app$run_server()
 #app$run_server(host = '0.0.0.0')
