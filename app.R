@@ -5,6 +5,7 @@ library(dashBootstrapComponents)
 library(tidyverse)
 library(here)
 library(plotly)
+library(dashTable)
 
 # Loading Data Sets
 lang_data <- read_csv(here('data/Processed/lang_barplot_data.csv'))
@@ -187,8 +188,13 @@ app$layout(
                     list(
                       dccGraph(id = 'Rec_lang_count_plot', style=list('border-width'= '0', 'width'='90%', 'height'='330px','text-align'= 'center'))
                     )
-                    ,md=12)#,
-                  # dbcCol(
+                    ,md=8),
+                  dbcCol(list(htmlH6("Salary Ranges for the Job"),
+                    dashDataTable(
+                    id = "salary_table",
+                    page_size = 7,
+                    style_cell=list('whiteSpace' = 'normal', 'height'= 'auto', 'textAlign' = 'center'))))
+                  
                   #   list(
                   #     htmlBr(),
                   #     htmlBr(),
@@ -266,13 +272,13 @@ app$callback(
       ggplot((aes(y = Q8, x = Q4))) +
       geom_count() +
       coord_flip() +
-      ggtitle("Level of Education vs. Recommended Programing Languages to Learn") +
+      ggtitle("Education Level vs. Recommended Programing Languages") +
       xlab("") +
       ylab("") +
       theme_classic() +
       theme(plot.title = element_text(hjust = 0.5)) +
       theme(
-        plot.title = element_text(size = 9, face = "bold"),
+        plot.title = element_text(size = 7, face = "bold"),
         axis.text = element_text(size = 7),
         axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
         axis.title = element_text(size = 8))
@@ -280,6 +286,30 @@ app$callback(
   }
 )
 
+app$callback(
+  list(output('salary_table', 'data'),
+       output('salary_table', 'columns')),
+  list(input('role_select', 'value'),
+       input('prog_exp', 'value'),
+       input('country_select', 'value')),
+  function(role, prog_exp, countries) {
+    exp_range <- slider_recognition(prog_exp)
+    percent_data <- general_processed_data %>% 
+      filter(Q5 == role & Q6 == exp_range & Q3 %in% countries) %>% 
+      drop_na(Q24) %>% 
+      group_by(Q24) %>% 
+      summarise(count = n()) %>% 
+      mutate(percentage = round(count / sum(count), 4) * 100) %>% 
+      mutate(`salary range` = Q24) %>% 
+      arrange(desc(percentage)) %>% 
+      mutate(percentage = paste(percentage, '%'))
+    cols = list('salary range', 'percentage')
+    columns <- cols %>%
+      purrr::map(function(col) list(name = col, id = col))
+    data <- df_to_list(percent_data %>% select(unlist(cols)))
+    list(data, columns)
+  }
+)
 # app$callback(
 #   list(output('median_salary', 'children')),
 #   list(input('role_select', 'value'),
