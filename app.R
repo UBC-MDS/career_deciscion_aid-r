@@ -310,21 +310,7 @@ app$callback(
     list(data, columns)
   }
 )
-# app$callback(
-#   list(output('median_salary', 'children')),
-#   list(input('role_select', 'value'),
-#        input('prog_exp', 'value'),
-#        input('country_select', 'value')),
-#   function(role, prog_exp, countries){
-#     exp_range <- slider_recognition(prog_exp)
-#     data <- general_processed_data %>%
-#       filter(Q5 == role & Q6 == exp_range & Q3 %in% countries)
-#     obtained_salary <- paste(as.character(median(data$lower, na.rm=TRUE)), "-",as.character(median(data$higher, na.rm=TRUE)), " (USD)")
-#     list(obtained_salary)
-#   }
-# )
- 
 
 
-app$run_server()
-#app$run_server(host = '0.0.0.0')
+# app$run_server()
+app$run_server(host = '0.0.0.0')
