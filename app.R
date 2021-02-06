@@ -194,18 +194,6 @@ app$layout(
                     id = "salary_table",
                     page_size = 7,
                     style_cell=list('whiteSpace' = 'normal', 'height'= 'auto', 'textAlign' = 'center'))))
-                  
-                  #   list(
-                  #     htmlBr(),
-                  #     htmlBr(),
-                  #     htmlBr(),
-                  #     dbcCard(list(htmlBr(),
-                  #                  htmlH4("Median Yearly Salary($)", style = list('text-align' = 'center')),
-                  #                  dbcCardBody(id = 'median_salary')), color = "warning", style = list('text-align' = 'center',
-                  #                                                                                      'font-size' = '22px'))
-                  #   )
-                  #   ,md=3)
-                  
                 )
               )
             )))))))
