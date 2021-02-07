@@ -110,7 +110,7 @@ app$layout(
                   list(
                     collapse
                   ))))),
-            style=list('backgroundColor'= 'steelblue',
+            style=list('backgroundColor'= '#3498DB',
               'border-radius'= 3,
               'padding'= 15,
               'margin-top'= 20,
@@ -170,12 +170,12 @@ app$layout(
               dbcRow(
                 list(
                   dbcCol(
-                    list(
+                    list(htmlH6("Used Programming Languages", style = list('text-align'= 'center')),
                       dccGraph(id = 'lang_plot', style=list('border-width'= '0', 'width'='100%', 'height'='340px'))
                     )
                     ,md=5),
                   dbcCol(
-                    list(
+                    list(htmlH6("Used Machine Learning Methods", style = list('text-align'= 'center')),
                       dccGraph(id = 'ML_plot', style=list('border-width'= '0', 'width'= '100%', 'height'= '340px'))
                     )
                     ,md=7)
@@ -185,18 +185,24 @@ app$layout(
               dbcRow(
                 list(
                   dbcCol(
-                    list(
+                    list(htmlH6("Education Level vs. Recommended Programming Languages", style = list('text-align'= 'center')),
                       dccGraph(id = 'Rec_lang_count_plot', style=list('border-width'= '0', 'width'='90%', 'height'='330px','text-align'= 'center'))
                     )
                     ,md=8),
-                  dbcCol(list(htmlH6("Salary Ranges for the Job"),
+                  dbcCol(list(htmlH6("Salary Ranges for the Job (USD)", style = list('text-align'= 'center')),
                     dashDataTable(
                     id = "salary_table",
                     page_size = 7,
                     style_cell=list('whiteSpace' = 'normal', 'height'= 'auto', 'textAlign' = 'center'))))
                 )
               )
-            )))))))
+            )))), dbcRow(list(htmlHr(),
+                             htmlP(paste0("This Data Science Decision Aid Dashboard was developed by Jacob McFarlane, Santiago Rugeles Schoonewolff, and Yuyan Guo. ",
+                                          "The server was last updated at: ", Sys.Date(), ". Please find the data source below:"), 
+                                   style = list('text-align'= 'left')),
+                             htmlA(children = list("2020 Kaggle Machine Learning and Data Science Survey"),
+                                   href = 'https://www.kaggle.com/c/kaggle-survey-2020/rules',
+                                   style = list(color = 'blue')))))))
               
                 
 
@@ -215,7 +221,7 @@ app$callback(
         xlab("") +
         ylab("Counts") +
         theme_classic() +
-        ggtitle("Used Programming Languages") +
+        # ggtitle("Used Programming Languages") +
       theme(
         plot.title = element_text(size = 9, face = "bold"),
         axis.text = element_text(size = 7),
@@ -236,7 +242,7 @@ app$callback(
       ggplot((aes(x = forcats::fct_infreq(selected_ml_method)))) +
       geom_bar()+
       coord_flip() +
-      ggtitle("Used ML Methods") +
+      # ggtitle("Used ML Methods") +
       xlab("") +
       ylab("Counts") +
       theme_classic() +
@@ -260,7 +266,7 @@ app$callback(
       ggplot((aes(y = Q8, x = Q4))) +
       geom_count() +
       coord_flip() +
-      ggtitle("Education Level vs. Recommended Programing Languages") +
+      # ggtitle("Education Level vs. Recommended Programming Languages") +
       xlab("") +
       ylab("") +
       theme_classic() +
@@ -300,5 +306,5 @@ app$callback(
 )
 
 
-# app$run_server()
-app$run_server(host = '0.0.0.0')
+app$run_server()
+# app$run_server(host = '0.0.0.0')
