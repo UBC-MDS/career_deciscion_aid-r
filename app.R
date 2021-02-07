@@ -14,18 +14,23 @@ general_processed_data <- read_csv(here('data/Processed/general_processed_data.c
 fluc_data <- read_csv(here('data/Processed/Fluctuation_plot_data.csv'))
 
 
-
+# Creating vec of job titles of interest to populate drop down
 roles <- lang_data %>%
   filter(Q5 != "Student" & Q5 != "Other" & Q5 != "Currently not employed" ) %>%
   select(Q5) %>%
   distinct(Q5) %>%
   pull()
 
+# Create list of countries
 countries <- general_processed_data %>%
   select(Q3) %>%
   distinct(Q3) %>%
   pull()
 
+#' Returns strings associated with values from slider
+#'
+#' @param prog_exp__value A number associated with slider
+#' @return exp_range the associated string
 slider_recognition <- function(prog_exp__val){
   if (prog_exp__val == 1) {
     exp_range <- '< 1 years'
@@ -63,6 +68,11 @@ collapse <- htmlDiv(
 )
 
 
+#' Opens and closes the learn more button
+#'
+#' @param is_open Boolean from app callback
+#' @param n input from clicks
+#' @return a named vector containing a boolean to control the button
 app$callback(
   list(output("collapse", "is_open")),
   list(input("collapse-button", "n_clicks"),
@@ -206,6 +216,12 @@ app$layout(
               
                 
 
+#' Generates Programming Language Graph, Handles Interactivity
+#'
+#' @param role Role to filter by
+#' @param prog_exp Years of Experience to Filter By
+#' @param country Country to filter by
+#' @return a named vector containing the histogram of languages mentioned
 app$callback(
   list(output('lang_plot', 'figure')),
   list(input('role_select', 'value'),
@@ -230,6 +246,12 @@ app$callback(
     }
 )
 
+#' Generates ML Approach Graph, Handles Interactivity
+#'
+#' @param role Role to filter by
+#' @param prog_exp Years of Experience to Filter By
+#' @param country Country to filter by
+#' @return a named vector containing the histogram of ML approaches mentioned
 app$callback(
   list(output('ML_plot', 'figure')),
   list(input('role_select', 'value'),
@@ -254,6 +276,14 @@ app$callback(
   }
 )
 
+
+#' Generates Education Level vs. Recommended Programming Languages 
+#' Graph, Handles Interactivity
+#'
+#' @param role Role to filter by
+#' @param prog_exp Years of Experience to Filter By
+#' @param country Country to filter by
+#' @return a named vector containing the Edu vs. Programming langs graph
 app$callback(
   list(output('Rec_lang_count_plot', 'figure')),
   list(input('role_select', 'value'),
@@ -280,6 +310,13 @@ app$callback(
   }
 )
 
+
+#' Generates Salary Table, Handles Interactivity
+#'
+#' @param role Role to filter by
+#' @param prog_exp Years of Experience to Filter By
+#' @param country Country to filter by
+#' @return a named vector containing the data and cols for the salary table
 app$callback(
   list(output('salary_table', 'data'),
        output('salary_table', 'columns')),
