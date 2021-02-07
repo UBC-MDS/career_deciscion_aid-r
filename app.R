@@ -29,7 +29,7 @@ countries <- general_processed_data %>%
 
 #' Returns strings associated with values from slider
 #'
-#' @param prog_exp__value A number
+#' @param prog_exp__value A number associated with slider
 #' @return exp_range the associated string
 slider_recognition <- function(prog_exp__val){
   if (prog_exp__val == 1) {
@@ -71,8 +71,8 @@ collapse <- htmlDiv(
 #' Opens and closes the learn more button
 #'
 #' @param is_open Boolean from app callback
-#' @param n 
-#' @return a named vector to determine whether to show learn more button
+#' @param n input from clicks
+#' @return a named vector containing a boolean to control the button
 app$callback(
   list(output("collapse", "is_open")),
   list(input("collapse-button", "n_clicks"),
